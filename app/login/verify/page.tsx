@@ -17,25 +17,25 @@ export default async function VerifyPage({
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
       <div className="w-full max-w-sm space-y-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold tracking-tight text-stone-900">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
             Hotel Avándaro
           </h1>
-          <p className="mt-2 text-sm text-stone-600">
+          <p className="mt-2 text-sm text-slate-600">
             Sistema de Gestión de Vacaciones
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-stone-200 p-8 space-y-6">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8 space-y-6">
           <div>
-            <h2 className="text-lg font-semibold text-stone-800">
+            <h2 className="text-lg font-semibold text-slate-800">
               Ingresa tu código
             </h2>
-            <p className="mt-1 text-sm text-stone-500">
+            <p className="mt-1 text-sm text-slate-500">
               Enviamos un código de 6 dígitos a{' '}
-              <span className="font-medium text-stone-700">{email}</span>.
+              <span className="font-medium text-slate-700">{email}</span>.
               Revisa también tu carpeta de spam.
             </p>
           </div>

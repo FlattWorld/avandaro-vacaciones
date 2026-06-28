@@ -11,14 +11,14 @@ export default function ImportForm() {
 
   return (
     <form action={formAction} className="space-y-6">
-      <div className="bg-white rounded-xl border border-stone-200 p-6 space-y-4">
+      <div className="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
         <div>
-          <label htmlFor="csv" className="block text-sm font-medium text-stone-700">
+          <label htmlFor="csv" className="block text-sm font-medium text-slate-700">
             Datos de empleados
           </label>
-          <p className="text-xs text-stone-400 mt-0.5 mb-2">
+          <p className="text-xs text-slate-400 mt-0.5 mb-2">
             Una línea por empleado:{' '}
-            <span className="font-mono bg-stone-100 px-1 rounded">
+            <span className="font-mono bg-slate-100 px-1 rounded">
               Nombre Completo,YYYY-MM-DD,SUBEMPRESA
             </span>
           </p>
@@ -33,14 +33,14 @@ export default function ImportForm() {
               'María González López,2020-01-10,AOT CTM\n' +
               'Carlos Ramírez Ortiz,2018-07-22,CORP'
             }
-            className="w-full rounded-lg border border-stone-300 px-3 py-2 text-sm font-mono text-stone-900 placeholder:text-stone-300 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-y"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm font-mono text-slate-900 placeholder:text-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 resize-y"
           />
         </div>
 
-        <div className="rounded-lg bg-stone-50 border border-stone-200 px-4 py-3 text-xs text-stone-500 space-y-1">
-          <p className="font-medium text-stone-600">Subempresas válidas</p>
+        <div className="rounded-lg bg-slate-50 border border-slate-200 px-4 py-3 text-xs text-slate-500 space-y-1">
+          <p className="font-medium text-slate-600">Subempresas válidas</p>
           <p>AOT CRA · AOT CTM · AOT VILLAS · CONFIANZA AOT · CONFIANZA DASA · CORP</p>
-          <p className="mt-1 text-stone-400">
+          <p className="mt-1 text-slate-400">
             Los periodos de vacaciones se calculan automáticamente desde el año 1 hasta el año actual.
             El email se puede agregar después, empleado por empleado.
           </p>

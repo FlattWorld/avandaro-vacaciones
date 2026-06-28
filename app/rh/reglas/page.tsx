@@ -31,7 +31,7 @@ export default async function ReglasPage({
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <h1 className="text-2xl font-bold text-stone-900">Reglas de vacaciones</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Reglas de vacaciones</h1>
         <a
           href={`/rh/reglas/nueva?subcompany=${subcompany}`}
           className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 transition-colors"
@@ -49,7 +49,7 @@ export default async function ReglasPage({
             className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
               subcompany === sub
                 ? 'bg-amber-100 text-amber-700 border border-amber-200'
-                : 'bg-white text-stone-600 border border-stone-200 hover:border-stone-300'
+                : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300'
             }`}
           >
             {sub}
@@ -58,35 +58,35 @@ export default async function ReglasPage({
       </div>
 
       {!rules || rules.length === 0 ? (
-        <div className="rounded-xl border border-stone-200 bg-white p-8 text-center text-stone-500">
+        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-500">
           No hay reglas configuradas para {subcompany}.
         </div>
       ) : (
-        <div className="rounded-xl border border-stone-200 bg-white overflow-hidden">
+        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-stone-50 border-b border-stone-200">
+            <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
-                <th className="text-left px-5 py-3 font-medium text-stone-600">Años de servicio</th>
-                <th className="text-left px-5 py-3 font-medium text-stone-600">Días asignados</th>
-                <th className="text-left px-5 py-3 font-medium text-stone-600 hidden sm:table-cell">Vencimiento</th>
-                <th className="text-left px-5 py-3 font-medium text-stone-600 hidden md:table-cell">Notas</th>
+                <th className="text-left px-5 py-3 font-medium text-slate-600">Años de servicio</th>
+                <th className="text-left px-5 py-3 font-medium text-slate-600">Días asignados</th>
+                <th className="text-left px-5 py-3 font-medium text-slate-600 hidden sm:table-cell">Vencimiento</th>
+                <th className="text-left px-5 py-3 font-medium text-slate-600 hidden md:table-cell">Notas</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-slate-100">
               {rules.map((rule) => (
-                <tr key={rule.id} className="hover:bg-stone-50 transition-colors">
-                  <td className="px-5 py-3 font-medium text-stone-900">
+                <tr key={rule.id} className="hover:bg-slate-50 transition-colors">
+                  <td className="px-5 py-3 font-medium text-slate-900">
                     {rule.year_to
                       ? `Año ${rule.year_from} – ${rule.year_to}`
                       : `Año ${rule.year_from}+`}
                   </td>
-                  <td className="px-5 py-3 text-stone-900">
+                  <td className="px-5 py-3 text-slate-900">
                     {rule.days_assigned} días
                   </td>
-                  <td className="px-5 py-3 text-stone-600 hidden sm:table-cell">
+                  <td className="px-5 py-3 text-slate-600 hidden sm:table-cell">
                     {rule.expiry_months} meses
                   </td>
-                  <td className="px-5 py-3 text-stone-400 text-xs hidden md:table-cell">
+                  <td className="px-5 py-3 text-slate-400 text-xs hidden md:table-cell">
                     {rule.notes ?? '—'}
                   </td>
                 </tr>

@@ -2,34 +2,33 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
+import { computeFifo, totalAvailable } from '@/lib/vacation-fifo'
 
 export async function crearSolicitudPorRH(
   employeeId: string,
   _prev: { error: string },
   formData: FormData
 ): Promise<{ error: string }> {
-  const periodId = formData.get('period_id')?.toString()
   const startDate = formData.get('start_date')?.toString()
   const endDate = formData.get('end_date')?.toString()
   const notes = formData.get('notes')?.toString() || null
 
-  if (!periodId || !startDate || !endDate) {
-    return { error: 'Todos los campos son requeridos' }
+  if (!startDate || !endDate) {
+    return { error: 'Las fechas son requeridas' }
   }
 
   if (endDate < startDate) {
     return { error: 'La fecha de fin debe ser posterior a la de inicio' }
   }
 
-  const start = new Date(startDate + 'T00:00:00')
-  const end = new Date(endDate + 'T00:00:00')
-  const totalDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
+  const totalDays = parseInt(formData.get('total_days')?.toString() ?? '0', 10)
+  if (!totalDays || totalDays < 1) {
+    return { error: 'Debes seleccionar al menos un día de vacaciones' }
+  }
 
   const supabase = await createClient()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autenticado' }
 
   const { data: rhEmployee } = await supabase
@@ -40,36 +39,51 @@ export async function crearSolicitudPorRH(
 
   if (!rhEmployee) return { error: 'Error de autorización' }
 
-  const { data: period } = await supabase
+  const today = new Date().toISOString().split('T')[0]
+  const { data: rawPeriods } = await supabase
     .from('vacation_periods')
     .select('*')
-    .eq('id', periodId)
     .eq('employee_id', employeeId)
-    .single()
+    .gte('expiry_date', today)
+    .order('start_date', { ascending: true })
 
-  if (!period) return { error: 'Periodo inválido' }
+  const periods = rawPeriods ?? []
+  const available = totalAvailable(periods)
 
-  const available = period.days_assigned + period.days_bonus - period.days_used
   if (totalDays > available) {
-    return { error: `Solo hay ${available} días disponibles en este periodo` }
+    return { error: `Solo hay ${available} día${available !== 1 ? 's' : ''} disponibles` }
+  }
+
+  const consumption = computeFifo(periods, totalDays)
+  if (!consumption) {
+    return { error: `Solo hay ${available} días disponibles` }
   }
 
   const { error: insertError } = await supabase.from('vacation_requests').insert({
     employee_id: employeeId,
-    period_id: periodId,
+    period_id: consumption[0].period_id,
     start_date: startDate,
     end_date: endDate,
     total_days: totalDays,
-    is_advance: false,
     notes,
     status: 'aprobada',
     submitted_by: rhEmployee.id,
     reviewed_by: rhEmployee.id,
     reviewed_at: new Date().toISOString(),
+    period_consumption: consumption,
   })
 
   if (insertError) {
-    return { error: 'No se pudo registrar la solicitud. Intenta de nuevo.' }
+    console.error('[rh/solicitar] insert error:', insertError.message, insertError.details, insertError.code)
+    return { error: `[debug] ${insertError.message}` }
+  }
+
+  for (const { period_id, days } of consumption) {
+    const period = periods.find((p) => p.id === period_id)!
+    await supabase
+      .from('vacation_periods')
+      .update({ days_used: period.days_used + days })
+      .eq('id', period_id)
   }
 
   redirect(`/rh/empleados/${employeeId}`)

@@ -38,13 +38,13 @@ export default async function EmpleadoDetailPage({
     <div className="space-y-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <Link href="/rh/empleados" className="text-sm text-stone-400 hover:text-stone-600">
+          <Link href="/rh/empleados" className="text-sm text-slate-400 hover:text-slate-600">
             ← Empleados
           </Link>
-          <h1 className="mt-2 text-2xl font-bold text-stone-900">{employee.full_name}</h1>
+          <h1 className="mt-2 text-2xl font-bold text-slate-900">{employee.full_name}</h1>
           <div className="flex items-center gap-4 mt-1 flex-wrap">
-            <span className="text-sm text-stone-500">{employee.subcompany}</span>
-            <span className="text-sm text-stone-500">
+            <span className="text-sm text-slate-500">{employee.subcompany}</span>
+            <span className="text-sm text-slate-500">
               Ingreso{' '}
               {new Date(employee.hire_date + 'T00:00:00').toLocaleDateString('es-MX', {
                 day: 'numeric',
@@ -53,7 +53,7 @@ export default async function EmpleadoDetailPage({
               })}
             </span>
             {employee.email ? (
-              <span className="text-sm text-stone-500">{employee.email}</span>
+              <span className="text-sm text-slate-500">{employee.email}</span>
             ) : (
               <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
                 Sin correo
@@ -70,46 +70,46 @@ export default async function EmpleadoDetailPage({
       </div>
 
       <div>
-        <h2 className="text-base font-semibold text-stone-800 mb-3">Saldos por periodo</h2>
+        <h2 className="text-base font-semibold text-slate-800 mb-3">Saldos por periodo</h2>
         {!periods || periods.length === 0 ? (
-          <div className="rounded-xl border border-stone-200 bg-white p-6 text-center text-sm text-stone-500">
+          <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-500">
             Sin periodos. Los periodos se generan al importar empleados desde el{' '}
             <Link href="/rh/importar" className="text-amber-600 hover:underline">
               importador
             </Link>.
           </div>
         ) : (
-          <div className="rounded-xl border border-stone-200 bg-white overflow-hidden">
+          <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
             <table className="w-full text-sm">
-              <thead className="bg-stone-50 border-b border-stone-200">
+              <thead className="bg-slate-50 border-b border-slate-200">
                 <tr>
-                  <th className="text-left px-5 py-3 font-medium text-stone-600">Periodo</th>
-                  <th className="text-left px-5 py-3 font-medium text-stone-600">Asig.</th>
-                  <th className="text-left px-5 py-3 font-medium text-stone-600">Usados</th>
-                  <th className="text-left px-5 py-3 font-medium text-stone-600">Disp.</th>
-                  <th className="text-left px-5 py-3 font-medium text-stone-600">Vence</th>
+                  <th className="text-left px-5 py-3 font-medium text-slate-600">Periodo</th>
+                  <th className="text-left px-5 py-3 font-medium text-slate-600">Asig.</th>
+                  <th className="text-left px-5 py-3 font-medium text-slate-600">Usados</th>
+                  <th className="text-left px-5 py-3 font-medium text-slate-600">Disp.</th>
+                  <th className="text-left px-5 py-3 font-medium text-slate-600">Vence</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-slate-100">
                 {periods.map((p) => {
                   const available = p.days_assigned + p.days_bonus - p.days_used
                   const expired = p.expiry_date < today
                   return (
                     <tr key={p.id} className={expired ? 'opacity-40' : ''}>
                       <td className="px-5 py-3">
-                        <span className="font-medium text-stone-900">Año {p.period_year}</span>
+                        <span className="font-medium text-slate-900">Año {p.period_year}</span>
                         {p.days_bonus > 0 && (
                           <span className="ml-2 text-xs text-green-600">+{p.days_bonus} bonus</span>
                         )}
                       </td>
-                      <td className="px-5 py-3 text-stone-600">{p.days_assigned + p.days_bonus}</td>
-                      <td className="px-5 py-3 text-stone-600">{p.days_used}</td>
+                      <td className="px-5 py-3 text-slate-600">{p.days_assigned + p.days_bonus}</td>
+                      <td className="px-5 py-3 text-slate-600">{p.days_used}</td>
                       <td className="px-5 py-3">
-                        <span className={`font-semibold ${available > 0 && !expired ? 'text-stone-900' : 'text-stone-400'}`}>
+                        <span className={`font-semibold ${available > 0 && !expired ? 'text-slate-900' : 'text-slate-400'}`}>
                           {available}
                         </span>
                       </td>
-                      <td className="px-5 py-3 text-xs text-stone-400">
+                      <td className="px-5 py-3 text-xs text-slate-400">
                         {new Date(p.expiry_date + 'T00:00:00').toLocaleDateString('es-MX', {
                           month: 'short',
                           year: 'numeric',
@@ -127,17 +127,17 @@ export default async function EmpleadoDetailPage({
 
       {requests && requests.length > 0 && (
         <div>
-          <h2 className="text-base font-semibold text-stone-800 mb-3">Historial de solicitudes</h2>
-          <div className="rounded-xl border border-stone-200 bg-white divide-y divide-stone-100 overflow-hidden">
+          <h2 className="text-base font-semibold text-slate-800 mb-3">Historial de solicitudes</h2>
+          <div className="rounded-xl border border-slate-200 bg-white divide-y divide-slate-100 overflow-hidden">
             {requests.map((req) => (
               <div key={req.id} className="flex items-center justify-between px-5 py-3 gap-4">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-stone-900">
+                  <p className="text-sm text-slate-900">
                     {formatDate(req.start_date)} → {formatDate(req.end_date)}
                     <span className="ml-2 font-medium">{req.total_days} días</span>
                   </p>
                   {req.notes && (
-                    <p className="text-xs text-stone-400 mt-0.5 italic">"{req.notes}"</p>
+                    <p className="text-xs text-slate-400 mt-0.5 italic">"{req.notes}"</p>
                   )}
                 </div>
                 <span

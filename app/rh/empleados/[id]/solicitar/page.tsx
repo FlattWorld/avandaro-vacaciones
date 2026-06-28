@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import RhSolicitarForm from './form'
-import type { PeriodBalance } from '@/lib/supabase/types'
+import { totalAvailable } from '@/lib/vacation-fifo'
 
 export default async function RhSolicitarPage({
   params,
@@ -21,33 +21,28 @@ export default async function RhSolicitarPage({
   if (!employee) notFound()
 
   const today = new Date().toISOString().split('T')[0]
-
-  const { data: rawPeriods } = await supabase
+  const { data: periods } = await supabase
     .from('vacation_periods')
     .select('*')
     .eq('employee_id', id)
-    .gt('expiry_date', today)
-    .order('period_year')
+    .gte('expiry_date', today)
+    .order('start_date', { ascending: true })
 
-  const periods: PeriodBalance[] = (rawPeriods ?? [])
-    .map((p) => ({ ...p, days_available: p.days_assigned + p.days_bonus - p.days_used }))
-    .filter((p) => p.days_available > 0)
+  const available = totalAvailable(periods ?? [])
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-md mx-auto">
       <div>
-        <Link href={`/rh/empleados/${id}`} className="text-sm text-stone-400 hover:text-stone-600">
+        <Link href={`/rh/empleados/${id}`} className="text-sm text-slate-400 hover:text-slate-600">
           ← {employee.full_name}
         </Link>
-        <h1 className="mt-2 text-2xl font-bold text-stone-900">Registrar vacaciones</h1>
-        <p className="mt-1 text-stone-500 text-sm">
+        <h1 className="mt-2 text-2xl font-bold text-slate-900">Registrar vacaciones</h1>
+        <p className="mt-1 text-slate-500 text-sm">
           {employee.full_name} · {employee.subcompany}
         </p>
       </div>
 
-      <div className="max-w-lg">
-        <RhSolicitarForm employeeId={id} periods={periods} />
-      </div>
+      <RhSolicitarForm employeeId={id} totalAvailable={available} />
     </div>
   )
 }

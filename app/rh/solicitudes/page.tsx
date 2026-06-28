@@ -36,10 +36,10 @@ export default async function SolicitudesPage({
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-stone-900">Solicitudes</h1>
+      <h1 className="text-2xl font-bold text-slate-900">Solicitudes</h1>
 
       {/* Tabs de estado */}
-      <div className="flex gap-1 border-b border-stone-200">
+      <div className="flex gap-1 border-b border-slate-200">
         {statusTabs.map((tab) => (
           <a
             key={tab.value}
@@ -47,7 +47,7 @@ export default async function SolicitudesPage({
             className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
               status === tab.value
                 ? 'border-amber-500 text-amber-700'
-                : 'border-transparent text-stone-500 hover:text-stone-700'
+                : 'border-transparent text-slate-500 hover:text-slate-700'
             }`}
           >
             {tab.label}
@@ -56,11 +56,11 @@ export default async function SolicitudesPage({
       </div>
 
       {!requests || requests.length === 0 ? (
-        <div className="rounded-xl border border-stone-200 bg-white p-8 text-center text-stone-500">
+        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-500">
           No hay solicitudes {status === 'pendiente' ? 'pendientes' : status === 'aprobada' ? 'aprobadas' : 'rechazadas'}.
         </div>
       ) : (
-        <div className="rounded-xl border border-stone-200 bg-white divide-y divide-stone-100 overflow-hidden">
+        <div className="rounded-xl border border-slate-200 bg-white divide-y divide-slate-100 overflow-hidden">
           {requests.map((req) => (
             <RequestRow key={req.id} request={req as any} />
           ))}
@@ -81,22 +81,22 @@ function RequestRow({ request }: { request: any }) {
     <div className="flex items-start justify-between px-5 py-4 gap-4">
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <p className="text-sm font-medium text-stone-900">
+          <p className="text-sm font-medium text-slate-900">
             {request.employee?.full_name}
           </p>
-          <span className="text-xs text-stone-400">{request.employee?.subcompany}</span>
+          <span className="text-xs text-slate-400">{request.employee?.subcompany}</span>
           {request.is_advance && (
             <span className="text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
               anticipo
             </span>
           )}
         </div>
-        <p className="text-sm text-stone-600 mt-0.5">
+        <p className="text-sm text-slate-600 mt-0.5">
           {formatDate(request.start_date)} → {formatDate(request.end_date)}
           <span className="ml-2 font-medium">{request.total_days} días</span>
         </p>
         {request.notes && (
-          <p className="text-xs text-stone-400 mt-1 italic">"{request.notes}"</p>
+          <p className="text-xs text-slate-400 mt-1 italic">"{request.notes}"</p>
         )}
         {request.rejection_reason && (
           <p className="text-xs text-red-400 mt-1">Motivo: {request.rejection_reason}</p>
@@ -118,7 +118,7 @@ function RequestRow({ request }: { request: any }) {
             Revisar →
           </a>
         )}
-        <span className="text-xs text-stone-400">
+        <span className="text-xs text-slate-400">
           {formatDate(request.created_at)}
         </span>
       </div>

@@ -21,8 +21,8 @@ export default async function RhPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-stone-900">Panel RH</h1>
-        <p className="mt-1 text-stone-500 text-sm">
+        <h1 className="text-2xl font-bold text-slate-900">Panel RH</h1>
+        <p className="mt-1 text-slate-500 text-sm">
           Gestión de solicitudes y saldos de vacaciones
         </p>
       </div>
@@ -75,20 +75,20 @@ function QuickCard({
       className={`block rounded-xl border p-5 transition-shadow hover:shadow-md ${
         highlight
           ? 'border-amber-200 bg-amber-50 hover:border-amber-300'
-          : 'border-stone-200 bg-white hover:border-stone-300'
+          : 'border-slate-200 bg-white hover:border-slate-300'
       }`}
     >
-      <p className="text-xs font-medium text-stone-500 uppercase tracking-wide">
+      <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
         {label}
       </p>
       <p
         className={`mt-2 font-bold ${
-          highlight ? 'text-amber-700' : 'text-stone-900'
+          highlight ? 'text-amber-700' : 'text-slate-900'
         } ${isText ? 'text-xl' : 'text-3xl'}`}
       >
         {value}
       </p>
-      <p className="mt-1 text-xs text-stone-400">{description}</p>
+      <p className="mt-1 text-xs text-slate-400">{description}</p>
     </Link>
   )
 }

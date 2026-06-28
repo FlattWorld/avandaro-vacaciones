@@ -3,35 +3,31 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Resend } from 'resend'
+import { computeFifo, totalAvailable } from '@/lib/vacation-fifo'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function crearSolicitud(formData: FormData) {
-  const periodId = formData.get('period_id')?.toString()
   const startDate = formData.get('start_date')?.toString()
   const endDate = formData.get('end_date')?.toString()
   const notes = formData.get('notes')?.toString() || null
-  const isAdvance = formData.get('is_advance') === 'true'
 
-  if (!periodId || !startDate || !endDate) {
-    return { error: 'Todos los campos son requeridos' }
+  if (!startDate || !endDate) {
+    return { error: 'Las fechas son requeridas' }
   }
 
   if (endDate < startDate) {
     return { error: 'La fecha de fin debe ser posterior a la de inicio' }
   }
 
-  // Calcular días hábiles (días calendario por ahora; se puede refinar)
-  const start = new Date(startDate)
-  const end = new Date(endDate)
-  const totalDays =
-    Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
+  const totalDays = parseInt(formData.get('total_days')?.toString() ?? '0', 10)
+  if (!totalDays || totalDays < 1) {
+    return { error: 'Debes seleccionar al menos un día de vacaciones' }
+  }
 
   const supabase = await createClient()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'No autenticado' }
 
   const { data: employee } = await supabase
@@ -42,38 +38,51 @@ export async function crearSolicitud(formData: FormData) {
 
   if (!employee) return { error: 'Empleado no encontrado' }
 
-  // Verificar que el periodo pertenece al empleado y tiene saldo
-  const { data: period } = await supabase
+  const today = new Date().toISOString().split('T')[0]
+  const { data: rawPeriods } = await supabase
     .from('vacation_periods')
     .select('*')
-    .eq('id', periodId)
     .eq('employee_id', employee.id)
-    .single()
+    .gte('expiry_date', today)
+    .order('start_date', { ascending: true })
 
-  if (!period) return { error: 'Periodo inválido' }
+  const periods = rawPeriods ?? []
+  const available = totalAvailable(periods)
 
-  const available = period.days_assigned + period.days_bonus - period.days_used
   if (totalDays > available) {
-    return { error: `Solo tienes ${available} días disponibles en este periodo` }
+    return { error: `Solo tienes ${available} día${available !== 1 ? 's' : ''} disponibles` }
   }
 
-  const { error: insertError } = await supabase
-    .from('vacation_requests')
-    .insert({
-      employee_id: employee.id,
-      period_id: periodId,
-      start_date: startDate,
-      end_date: endDate,
-      total_days: totalDays,
-      is_advance: isAdvance,
-      notes,
-    })
+  const consumption = computeFifo(periods, totalDays)
+  if (!consumption) {
+    return { error: `Solo tienes ${available} días disponibles` }
+  }
+
+  // Insertar la solicitud primero
+  const { error: insertError } = await supabase.from('vacation_requests').insert({
+    employee_id: employee.id,
+    period_id: consumption[0].period_id,
+    start_date: startDate,
+    end_date: endDate,
+    total_days: totalDays,
+    notes,
+    period_consumption: consumption,
+  })
 
   if (insertError) {
-    return { error: 'No se pudo registrar la solicitud. Intenta de nuevo.' }
+    console.error('[solicitar] insert error:', insertError.message, insertError.details)
+    return { error: `[debug] ${insertError.message}` }
   }
 
-  // Notificar a RH por email (sin bloquear si falla)
+  // Descontar días de cada periodo (FIFO)
+  for (const { period_id, days } of consumption) {
+    const period = periods.find((p) => p.id === period_id)!
+    await supabase
+      .from('vacation_periods')
+      .update({ days_used: period.days_used + days })
+      .eq('id', period_id)
+  }
+
   try {
     await resend.emails.send({
       from: process.env.FROM_EMAIL!,
@@ -84,14 +93,14 @@ export async function crearSolicitud(formData: FormData) {
         <ul>
           <li><strong>Del:</strong> ${startDate}</li>
           <li><strong>Al:</strong> ${endDate}</li>
-          <li><strong>Total:</strong> ${totalDays} días</li>
+          <li><strong>Días de vacaciones:</strong> ${totalDays}</li>
           ${notes ? `<li><strong>Notas:</strong> ${notes}</li>` : ''}
         </ul>
         <p><a href="${process.env.NEXT_PUBLIC_SITE_URL}/rh/solicitudes">Ver solicitudes pendientes →</a></p>
       `,
     })
   } catch {
-    // El email es informativo; no revertir la solicitud si falla
+    // No bloqueante
   }
 
   redirect('/dashboard/historial')

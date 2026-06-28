@@ -25,7 +25,7 @@ export default function VerifyForm({ action, email }: VerifyFormProps) {
       <div>
         <label
           htmlFor="token"
-          className="block text-sm font-medium text-stone-700"
+          className="block text-sm font-medium text-slate-700"
         >
           Código de verificación
         </label>
@@ -38,7 +38,7 @@ export default function VerifyForm({ action, email }: VerifyFormProps) {
           maxLength={6}
           required
           placeholder="123456"
-          className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2 text-center text-xl font-mono tracking-widest text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+          className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-center text-xl font-mono tracking-widest text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
         />
       </div>
 
@@ -56,7 +56,7 @@ export default function VerifyForm({ action, email }: VerifyFormProps) {
         {pending ? 'Verificando…' : 'Verificar código'}
       </button>
 
-      <p className="text-center text-xs text-stone-500">
+      <p className="text-center text-xs text-slate-500">
         <a href="/login" className="text-amber-600 hover:underline">
           Usar otro correo
         </a>

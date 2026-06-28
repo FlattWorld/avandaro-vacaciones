@@ -57,22 +57,22 @@ export default async function HistorialPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-stone-900">Historial de solicitudes</h1>
+      <h1 className="text-2xl font-bold text-slate-900">Historial de solicitudes</h1>
 
       {enrichedRequests.length === 0 ? (
-        <div className="rounded-xl border border-stone-200 bg-white p-8 text-center text-stone-500">
+        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-500">
           No tienes solicitudes registradas.
         </div>
       ) : (
-        <div className="rounded-xl border border-stone-200 bg-white divide-y divide-stone-100 overflow-hidden">
+        <div className="rounded-xl border border-slate-200 bg-white divide-y divide-slate-100 overflow-hidden">
           {enrichedRequests.map((req) => (
             <div key={req.id} className="flex items-start justify-between px-5 py-4 gap-4">
               <div>
-                <p className="text-sm font-medium text-stone-900">
+                <p className="text-sm font-medium text-slate-900">
                   {formatDate(req.start_date)} → {formatDate(req.end_date)}
-                  <span className="ml-2 text-stone-600">{req.total_days} días</span>
+                  <span className="ml-2 text-slate-600">{req.total_days} días</span>
                 </p>
-                <p className="text-xs text-stone-400 mt-0.5">
+                <p className="text-xs text-slate-400 mt-0.5">
                   Periodo año {req.vacation_period?.period_year} ·{' '}
                   Solicitado el {formatDate(req.created_at)}
                 </p>
@@ -82,7 +82,7 @@ export default async function HistorialPage() {
                   </p>
                 )}
                 {req.notes && (
-                  <p className="text-xs text-stone-400 mt-1 italic">"{req.notes}"</p>
+                  <p className="text-xs text-slate-400 mt-1 italic">"{req.notes}"</p>
                 )}
               </div>
               <span

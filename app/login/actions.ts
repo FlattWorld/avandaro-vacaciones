@@ -22,12 +22,13 @@ export async function sendOtpEmail(formData: FormData) {
   const { error } = await supabase.auth.signInWithOtp({
     email,
     options: {
-      shouldCreateUser: false,
+      shouldCreateUser: true,
       emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
     },
   })
 
   if (error) {
+    console.error('[login] signInWithOtp error:', error.message)
     return { error: 'No se pudo enviar el correo. Intenta de nuevo.' }
   }
 

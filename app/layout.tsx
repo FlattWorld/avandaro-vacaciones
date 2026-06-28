@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist } from 'next/font/google'
 import './globals.css'
 
@@ -9,6 +9,12 @@ export const metadata: Metadata = {
   description: 'Sistema de gestión de vacaciones Grupo Avándaro',
 }
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -16,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={`${geist.variable} h-full antialiased`}>
-      <body className="min-h-full bg-stone-50 font-sans">{children}</body>
+      <body className="min-h-full bg-slate-50 font-sans">{children}</body>
     </html>
   )
 }

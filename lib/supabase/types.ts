@@ -41,7 +41,7 @@ export type VacationPeriod = {
 export type VacationRequest = {
   id: string
   employee_id: string
-  period_id: string
+  period_id: string  // primer periodo consumido (FIFO)
   start_date: string
   end_date: string
   total_days: number
@@ -52,6 +52,7 @@ export type VacationRequest = {
   reviewed_at: string | null
   rejection_reason: string | null
   submitted_by: string | null
+  period_consumption: Array<{ period_id: string; days: number }> | null
   created_at: string
 }
 
@@ -117,6 +118,7 @@ export type Database = {
           reviewed_at?: string | null
           rejection_reason?: string | null
           submitted_by?: string | null
+          period_consumption?: Array<{ period_id: string; days: number }> | null
         }
         Update: Partial<Omit<VacationRequest, 'id' | 'created_at'>>
         Relationships: []

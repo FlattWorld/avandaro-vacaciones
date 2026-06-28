@@ -15,8 +15,8 @@ export default async function EmpleadosPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-stone-900">Empleados</h1>
-          <p className="text-sm text-stone-500">{employees?.length ?? 0} registros</p>
+          <h1 className="text-2xl font-bold text-slate-900">Empleados</h1>
+          <p className="text-sm text-slate-500">{employees?.length ?? 0} registros</p>
         </div>
         <a
           href="/rh/importar"
@@ -26,27 +26,27 @@ export default async function EmpleadosPage() {
         </a>
       </div>
 
-      <div className="rounded-xl border border-stone-200 bg-white overflow-hidden">
+      <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-stone-50 border-b border-stone-200">
+          <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="text-left px-5 py-3 font-medium text-stone-600">Nombre</th>
-              <th className="text-left px-5 py-3 font-medium text-stone-600 hidden sm:table-cell">Subempresa</th>
-              <th className="text-left px-5 py-3 font-medium text-stone-600 hidden md:table-cell">Ingreso</th>
+              <th className="text-left px-5 py-3 font-medium text-slate-600">Nombre</th>
+              <th className="text-left px-5 py-3 font-medium text-slate-600 hidden sm:table-cell">Subempresa</th>
+              <th className="text-left px-5 py-3 font-medium text-slate-600 hidden md:table-cell">Ingreso</th>
               <th className="px-5 py-3"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-stone-100">
+          <tbody className="divide-y divide-slate-100">
             {(employees ?? []).map((emp) => (
-              <tr key={emp.id} className="hover:bg-stone-50 transition-colors">
+              <tr key={emp.id} className="hover:bg-slate-50 transition-colors">
                 <td className="px-5 py-3">
-                  <p className="font-medium text-stone-900">{emp.full_name}</p>
-                  <p className="text-stone-400 text-xs">{emp.email ?? 'Sin correo'}</p>
+                  <p className="font-medium text-slate-900">{emp.full_name}</p>
+                  <p className="text-slate-400 text-xs">{emp.email ?? 'Sin correo'}</p>
                 </td>
-                <td className="px-5 py-3 text-stone-600 hidden sm:table-cell">
+                <td className="px-5 py-3 text-slate-600 hidden sm:table-cell">
                   {emp.subcompany}
                 </td>
-                <td className="px-5 py-3 text-stone-600 hidden md:table-cell">
+                <td className="px-5 py-3 text-slate-600 hidden md:table-cell">
                   {new Date(emp.hire_date).toLocaleDateString('es-MX', {
                     day: 'numeric',
                     month: 'short',

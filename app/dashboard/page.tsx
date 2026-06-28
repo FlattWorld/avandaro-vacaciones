@@ -42,10 +42,10 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-stone-900">
+        <h1 className="text-2xl font-bold text-slate-900">
           Hola, {employee.full_name.split(' ')[0]}
         </h1>
-        <p className="mt-1 text-stone-500 text-sm">{employee.subcompany}</p>
+        <p className="mt-1 text-slate-500 text-sm">{employee.subcompany}</p>
       </div>
 
       {/* Resumen de saldo */}
@@ -68,15 +68,15 @@ export default async function DashboardPage() {
 
       {/* Detalle por periodo */}
       {periodsWithBalance.length === 0 ? (
-        <div className="rounded-xl border border-stone-200 bg-white p-8 text-center text-stone-500">
+        <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-500">
           No tienes periodos de vacaciones activos. Contacta a RH.
         </div>
       ) : (
         <div className="space-y-3">
-          <h2 className="text-sm font-semibold text-stone-700 uppercase tracking-wide">
+          <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
             Detalle por periodo
           </h2>
-          <div className="rounded-xl border border-stone-200 bg-white divide-y divide-stone-100 overflow-hidden">
+          <div className="rounded-xl border border-slate-200 bg-white divide-y divide-slate-100 overflow-hidden">
             {periodsWithBalance.map((period) => (
               <PeriodRow key={period.id} period={period} />
             ))}
@@ -103,15 +103,15 @@ function StatCard({
       className={`rounded-xl border p-5 ${
         highlight
           ? 'border-amber-200 bg-amber-50'
-          : 'border-stone-200 bg-white'
+          : 'border-slate-200 bg-white'
       }`}
     >
-      <p className="text-xs font-medium text-stone-500 uppercase tracking-wide">
+      <p className="text-xs font-medium text-slate-500 uppercase tracking-wide">
         {label}
       </p>
       <p
         className={`mt-2 text-3xl font-bold ${
-          highlight ? 'text-amber-700' : 'text-stone-900'
+          highlight ? 'text-amber-700' : 'text-slate-900'
         } ${isText ? 'text-xl' : ''}`}
       >
         {value}
@@ -130,7 +130,7 @@ function PeriodRow({ period }: { period: PeriodBalance }) {
   return (
     <div className="flex items-center justify-between px-5 py-4">
       <div>
-        <p className="text-sm font-medium text-stone-900">
+        <p className="text-sm font-medium text-slate-900">
           Año {period.period_year}
           {period.is_advance && (
             <span className="ml-2 text-xs bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
@@ -138,7 +138,7 @@ function PeriodRow({ period }: { period: PeriodBalance }) {
             </span>
           )}
         </p>
-        <p className="text-xs text-stone-500 mt-0.5">
+        <p className="text-xs text-slate-500 mt-0.5">
           Vence {formatDate(period.expiry_date)}
           {isExpiringSoon && (
             <span className="ml-1 text-amber-600 font-medium">
@@ -148,11 +148,11 @@ function PeriodRow({ period }: { period: PeriodBalance }) {
         </p>
       </div>
       <div className="text-right">
-        <p className="text-lg font-bold text-stone-900">
+        <p className="text-lg font-bold text-slate-900">
           {period.days_available}
-          <span className="text-xs font-normal text-stone-500 ml-1">días</span>
+          <span className="text-xs font-normal text-slate-500 ml-1">días</span>
         </p>
-        <p className="text-xs text-stone-400">
+        <p className="text-xs text-slate-400">
           {period.days_used} usados / {period.days_assigned + period.days_bonus} totales
         </p>
       </div>

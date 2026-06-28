@@ -1,21 +1,19 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import SolicitarForm from './solicitar-form'
-import type { PeriodBalance } from '@/lib/supabase/types'
+import { totalAvailable } from '@/lib/vacation-fifo'
 
 export const metadata = { title: 'Solicitar días — Vacaciones Avándaro' }
 
 export default async function SolicitarPage() {
   const supabase = await createClient()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
   const { data: employee } = await supabase
     .from('employees')
-    .select('id, full_name')
+    .select('id')
     .eq('email', user.email!)
     .single()
 
@@ -27,30 +25,25 @@ export default async function SolicitarPage() {
     .select('*')
     .eq('employee_id', employee.id)
     .gte('expiry_date', today)
-    .order('period_year')
+    .order('start_date', { ascending: true })
 
-  const periodsWithBalance: PeriodBalance[] = (periods ?? [])
-    .map((p) => ({
-      ...p,
-      days_available: p.days_assigned + p.days_bonus - p.days_used,
-    }))
-    .filter((p) => p.days_available > 0)
+  const available = totalAvailable(periods ?? [])
 
   return (
-    <div className="space-y-6 max-w-lg">
+    <div className="space-y-4 max-w-md mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-stone-900">Solicitar días</h1>
-        <p className="mt-1 text-stone-500 text-sm">
+        <h1 className="text-2xl font-bold text-slate-900">Solicitar días</h1>
+        <p className="mt-1 text-slate-500 text-sm">
           Las solicitudes quedan pendientes de aprobación por RH.
         </p>
       </div>
 
-      {periodsWithBalance.length === 0 ? (
-        <div className="rounded-xl border border-stone-200 bg-white p-8 text-center text-stone-500">
+      {available === 0 ? (
+        <div className="rounded-2xl border border-slate-200 bg-white p-8 text-center text-slate-500">
           No tienes días disponibles en ningún periodo activo.
         </div>
       ) : (
-        <SolicitarForm periods={periodsWithBalance} employeeId={employee.id} />
+        <SolicitarForm totalAvailable={available} />
       )}
     </div>
   )

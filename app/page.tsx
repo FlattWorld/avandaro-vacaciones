@@ -20,9 +20,9 @@ export default async function RootPage() {
   if (!employee) {
     // Usuario autenticado en Supabase pero sin registro en employees
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center space-y-4">
-          <p className="text-stone-600">
+          <p className="text-slate-600">
             Tu cuenta no está registrada en el sistema. Contacta a RH.
           </p>
           <form action="/auth/signout" method="post">
