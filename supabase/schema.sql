@@ -81,6 +81,8 @@ CREATE TABLE vacation_requests (
   reviewed_by      UUID REFERENCES employees(id),
   reviewed_at      TIMESTAMPTZ,
   rejection_reason TEXT,
+  submitted_by     UUID REFERENCES employees(id),  -- RH que registró la solicitud a nombre del empleado
+  period_consumption JSONB,                         -- distribución FIFO: [{period_id, days}, ...]
   created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
   CONSTRAINT valid_date_range CHECK (end_date >= start_date),
   CONSTRAINT positive_days CHECK (total_days > 0)
@@ -102,6 +104,17 @@ ALTER TABLE employees ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vacation_periods ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vacation_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE vacation_rules ENABLE ROW LEVEL SECURITY;
+
+-- Función auxiliar: verifica que un email exista en employees (usada en el login OTP)
+-- SECURITY DEFINER permite ejecutarla sin sesión activa (antes del login)
+CREATE OR REPLACE FUNCTION check_employee_email(p_email TEXT)
+RETURNS BOOLEAN
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+AS $$
+  SELECT EXISTS (SELECT 1 FROM employees WHERE email = p_email)
+$$;
 
 -- Función auxiliar: obtiene el rol del usuario autenticado actual
 CREATE OR REPLACE FUNCTION get_current_employee_role()

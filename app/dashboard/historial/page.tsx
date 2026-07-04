@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import type { VacationRequest } from '@/lib/supabase/types'
+import { CancelRequestButton } from './cancel-button'
 
 export const metadata = { title: 'Historial — Vacaciones Avándaro' }
 
@@ -85,13 +86,23 @@ export default async function HistorialPage() {
                   <p className="text-xs text-slate-400 mt-1 italic">"{req.notes}"</p>
                 )}
               </div>
-              <span
-                className={`shrink-0 text-xs font-medium px-2 py-0.5 rounded-full ${
-                  statusColors[req.status]
-                }`}
-              >
-                {req.status}
-              </span>
+              <div className="flex flex-col items-end gap-2 shrink-0">
+                <span
+                  className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                    statusColors[req.status]
+                  }`}
+                >
+                  {req.status}
+                </span>
+                {req.status === 'pendiente' && (
+                  <CancelRequestButton
+                    requestId={req.id}
+                    startDate={req.start_date}
+                    endDate={req.end_date}
+                    totalDays={req.total_days}
+                  />
+                )}
+              </div>
             </div>
           ))}
         </div>

@@ -61,12 +61,20 @@ export default async function EmpleadoDetailPage({
             )}
           </div>
         </div>
-        <Link
-          href={`/rh/empleados/${id}/solicitar`}
-          className="shrink-0 rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 transition-colors"
-        >
-          Solicitar vacaciones
-        </Link>
+        <div className="flex gap-2 shrink-0">
+          <Link
+            href={`/rh/empleados/${id}/editar`}
+            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
+          >
+            Editar
+          </Link>
+          <Link
+            href={`/rh/empleados/${id}/solicitar`}
+            className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-700 transition-colors"
+          >
+            Solicitar vacaciones
+          </Link>
+        </div>
       </div>
 
       <div>

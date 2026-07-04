@@ -19,14 +19,27 @@ export default async function SolicitudesPage({
   const status = (VALID_STATUS.includes(rawStatus as RequestStatus) ? rawStatus : 'pendiente') as RequestStatus
   const supabase = await createClient()
 
-  // Dos queries separadas para evitar joins sin Relationships tipadas
   const { data: rawRequests } = await supabase
     .from('vacation_requests')
     .select('*')
     .eq('status', status)
     .order('created_at', { ascending: false })
 
-  const requests = rawRequests as RequestRow[] | null
+  // Fetch employees para los requests encontrados
+  const employeeIds = [...new Set((rawRequests ?? []).map((r) => r.employee_id))]
+  const { data: employees } = employeeIds.length > 0
+    ? await supabase
+        .from('employees')
+        .select('id, full_name, email, subcompany')
+        .in('id', employeeIds)
+    : { data: [] }
+
+  const employeeMap = Object.fromEntries((employees ?? []).map((e) => [e.id, e]))
+
+  const requests = (rawRequests ?? []).map((r) => ({
+    ...r,
+    employee: employeeMap[r.employee_id] ?? null,
+  })) as RequestRow[]
 
   const statusTabs = [
     { value: 'pendiente', label: 'Pendientes' },
@@ -55,7 +68,7 @@ export default async function SolicitudesPage({
         ))}
       </div>
 
-      {!requests || requests.length === 0 ? (
+      {requests.length === 0 ? (
         <div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-500">
           No hay solicitudes {status === 'pendiente' ? 'pendientes' : status === 'aprobada' ? 'aprobadas' : 'rechazadas'}.
         </div>

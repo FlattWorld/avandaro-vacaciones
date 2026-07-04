@@ -38,6 +38,21 @@ export async function crearSolicitud(formData: FormData) {
 
   if (!employee) return { error: 'Empleado no encontrado' }
 
+  // Verificar traslape con solicitudes existentes (pendientes o aprobadas)
+  const { data: overlapping } = await supabase
+    .from('vacation_requests')
+    .select('start_date, end_date')
+    .eq('employee_id', employee.id)
+    .neq('status', 'rechazada')
+    .lte('start_date', endDate)
+    .gte('end_date', startDate)
+    .limit(1)
+
+  if (overlapping && overlapping.length > 0) {
+    const ex = overlapping[0]
+    return { error: `Ya tienes una solicitud del ${fmtDate(ex.start_date)} al ${fmtDate(ex.end_date)} que se traslapa con las fechas seleccionadas` }
+  }
+
   const today = new Date().toISOString().split('T')[0]
   const { data: rawPeriods } = await supabase
     .from('vacation_periods')
@@ -104,4 +119,12 @@ export async function crearSolicitud(formData: FormData) {
   }
 
   redirect('/dashboard/historial')
+}
+
+function fmtDate(dateStr: string) {
+  return new Date(dateStr + 'T00:00:00').toLocaleDateString('es-MX', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  })
 }
