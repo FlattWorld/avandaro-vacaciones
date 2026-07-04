@@ -45,6 +45,8 @@ export async function crearRegla(
     year_to: yearTo,
     days_assigned: daysAssigned,
     expiry_months: expiryMonths,
+    valid_from: new Date().toISOString().split('T')[0],
+    valid_to: null,
     notes,
     created_by: rh.id,
   })

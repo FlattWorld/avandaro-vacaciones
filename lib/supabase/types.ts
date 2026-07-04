@@ -125,7 +125,7 @@ export type Database = {
       }
       vacation_rules: {
         Row: VacationRule
-        Insert: Omit<VacationRule, 'id' | 'created_at'>
+        Insert: Omit<VacationRule, 'id' | 'created_at' | 'valid_from' | 'valid_to'> & { valid_from?: string; valid_to?: string | null }
         Update: Partial<Omit<VacationRule, 'id' | 'created_at'>>
         Relationships: []
       }
